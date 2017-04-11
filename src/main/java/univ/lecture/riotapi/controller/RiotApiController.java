@@ -1,6 +1,8 @@
 package univ.lecture.riotapi.controller;
 
 import lombok.extern.log4j.Log4j;
+
+import org.codehaus.groovy.vmplugin.v7.IndyInterface.CALL_TYPES;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.http.MediaType;
@@ -9,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import univ.lecture.riotapi.model.CalcApp;
 import univ.lecture.riotapi.model.Summoner;
 
 import java.io.UnsupportedEncodingException;
@@ -24,16 +28,16 @@ public class RiotApiController {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	@RequestMapping(value = "/summoner/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "/summoner/{name}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public Summoner querySummoner(@PathVariable("name") String summonerName) throws UnsupportedEncodingException {
 		final String url = "https://kr.api.pvp.net/api/lol/kr/v1.4/summoner/by-name/" + summonerName
 				+ "?api_key=7f69a913-a7e3-4d41-b343-6389ba6fe730";
 
 		String response = restTemplate.getForObject(url, String.class);
-		Map<String, Object> parsedMap = new JacksonJsonParser().parseMap(response);
-
-		parsedMap.forEach(
-				(key, value) -> log.info(String.format("key [%s] type [%s] value [%s]", key, value.getClass(), value)));
+        Map<String, Object> parsedMap = new JacksonJsonParser().parseMap(response);
+        
+        //parsedMap.forEach((key, value) -> log.info(String.format("key [%s] type [%s] value [%s]", key, value.getClass(), value)));
+		
 		/*
 		 * Map<String, Object> summonerDetail = (Map<String, Object>)
 		 * parsedMap.values().toArray()[0]; String queriedName =
@@ -41,7 +45,10 @@ public class RiotApiController {
 		 * (Integer)summonerDetail.get("summonerLevel"); Summoner summoner = new
 		 * Summoner(queriedName, queriedLevel);
 		 */
-
-		return summoner;
+		CalcApp cal = new CalcApp();
+		
+		
+		// return 에 수식 값 들어가야 함
+		return null;
 	}
 }
