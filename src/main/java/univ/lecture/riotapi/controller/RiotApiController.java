@@ -21,25 +21,27 @@ import java.util.Map;
 @RequestMapping("/api/v1")
 @Log4j
 public class RiotApiController {
-    @Autowired
-    private RestTemplate restTemplate;
+	@Autowired
+	private RestTemplate restTemplate;
 
-    @RequestMapping(value = "/summoner/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Summoner querySummoner(@PathVariable("name") String summonerName) throws UnsupportedEncodingException {
-        final String url = "https://kr.api.pvp.net/api/lol/kr/v1.4/summoner/by-name/" +
-                summonerName +
-                "?api_key=7f69a913-a7e3-4d41-b343-6389ba6fe730";
+	@RequestMapping(value = "/summoner/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public Summoner querySummoner(@PathVariable("name") String summonerName) throws UnsupportedEncodingException {
+		final String url = "https://kr.api.pvp.net/api/lol/kr/v1.4/summoner/by-name/" + summonerName
+				+ "?api_key=7f69a913-a7e3-4d41-b343-6389ba6fe730";
 
-        String response = restTemplate.getForObject(url, String.class);
-        Map<String, Object> parsedMap = new JacksonJsonParser().parseMap(response);
+		String response = restTemplate.getForObject(url, String.class);
+		Map<String, Object> parsedMap = new JacksonJsonParser().parseMap(response);
 
-        parsedMap.forEach((key, value) -> log.info(String.format("key [%s] type [%s] value [%s]", key, value.getClass(), value)));
+		parsedMap.forEach(
+				(key, value) -> log.info(String.format("key [%s] type [%s] value [%s]", key, value.getClass(), value)));
+		/*
+		 * Map<String, Object> summonerDetail = (Map<String, Object>)
+		 * parsedMap.values().toArray()[0]; String queriedName =
+		 * (String)summonerDetail.get("name"); int queriedLevel =
+		 * (Integer)summonerDetail.get("summonerLevel"); Summoner summoner = new
+		 * Summoner(queriedName, queriedLevel);
+		 */
 
-        Map<String, Object> summonerDetail = (Map<String, Object>) parsedMap.values().toArray()[0];
-        String queriedName = (String)summonerDetail.get("name");
-        int queriedLevel = (Integer)summonerDetail.get("summonerLevel");
-        Summoner summoner = new Summoner(queriedName, queriedLevel);
-
-        return summoner;
-    }
+		return summoner;
+	}
 }
